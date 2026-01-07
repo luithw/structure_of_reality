@@ -1,0 +1,107 @@
+name: Publish Blog Post
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '_posts/**'
+  workflow_dispatch:
+    inputs:
+      post_file:
+        description: 'Path to the post file (e.g., _posts/2024-01-01-my-post.md)'
+        required: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Fetch last 2 commits to detect changes
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          cd scripts
+          pip install -r requirements.txt
+      
+      - name: Detect changed posts
+        id: changed_posts
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "posts=${{ github.event.inputs.post_file }}" >> $GITHUB_OUTPUT
+          else
+            # Get list of changed markdown files in _posts directory
+            CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | grep "^_posts/.*\.md$" || true)
+            if [ -z "$CHANGED_FILES" ]; then
+              echo "No post files changed"
+              echo "posts=" >> $GITHUB_OUTPUT
+            else
+              echo "Changed posts:"
+              echo "$CHANGED_FILES"
+              # Convert newlines to spaces
+              POSTS=$(echo "$CHANGED_FILES" | tr '\n' ' ')
+              echo "posts=$POSTS" >> $GITHUB_OUTPUT
+            fi
+          fi
+      
+      - name: Publish to Medium and Facebook
+        if: steps.changed_posts.outputs.posts != ''
+        env:
+          MEDIUM_INTEGRATION_TOKEN: ${{ secrets.MEDIUM_INTEGRATION_TOKEN }}
+          FACEBOOK_PAGE_ACCESS_TOKEN: ${{ secrets.FACEBOOK_PAGE_ACCESS_TOKEN }}
+          FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+          GITHUB_PAGES_URL: ${{ vars.GITHUB_PAGES_URL }}
+        run: |
+          POSTS="${{ steps.changed_posts.outputs.posts }}"
+          
+          for POST_FILE in $POSTS; do
+            if [ -f "$POST_FILE" ]; then
+              echo "=========================================="
+              echo "Publishing: $POST_FILE"
+              echo "=========================================="
+              
+              # Extract post metadata for URL construction
+              FILENAME=$(basename "$POST_FILE")
+              POST_DATE=$(echo "$FILENAME" | grep -oE '^[0-9]{4}-[0-9]{2}-[0-9]{2}')
+              POST_SLUG=$(echo "$FILENAME" | sed -E 's/^[0-9]{4}-[0-9]{2}-[0-9]{2}-(.*)\.md$/\1/')
+              
+              YEAR=$(echo "$POST_DATE" | cut -d'-' -f1)
+              MONTH=$(echo "$POST_DATE" | cut -d'-' -f2)
+              DAY=$(echo "$POST_DATE" | cut -d'-' -f3)
+              
+              POST_URL="${GITHUB_PAGES_URL}/${YEAR}/${MONTH}/${DAY}/${POST_SLUG}/"
+              
+              # Publish to Medium
+              echo "Publishing to Medium..."
+              python3 scripts/publish_to_medium.py "$POST_FILE" || echo "⚠️  Medium publishing failed"
+              
+              # Publish to Facebook
+              echo "Publishing to Facebook..."
+              python3 scripts/publish_to_facebook.py "$POST_FILE" "$POST_URL" || echo "⚠️  Facebook publishing failed"
+              
+              echo ""
+            fi
+          done
+      
+      - name: Commit updated post metadata
+        if: steps.changed_posts.outputs.posts != ''
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add _posts/
+          git diff --staged --quiet || git commit -m "Update post metadata with Medium/Facebook URLs"
+      
+      - name: Push changes
+        if: steps.changed_posts.outputs.posts != ''
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+

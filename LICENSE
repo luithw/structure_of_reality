@@ -1,0 +1,28 @@
+Copyright Notice
+
+Copyright (c) 2024 Tim. All Rights Reserved.
+
+## Blog Content
+
+All blog posts, articles, written content, and intellectual property contained 
+in this repository are the exclusive property of Tim and are protected by 
+copyright law.
+
+No part of the blog content may be reproduced, distributed, or transmitted in 
+any form or by any means without the prior written permission of the author.
+
+## Code and Framework
+
+The blog framework, automation scripts, and technical infrastructure code 
+(Jekyll configuration, GitHub Actions workflows, publishing scripts, CSS, and 
+HTML templates) are provided "as is" for reference purposes.
+
+If you wish to use or adapt the technical framework for your own blog, please:
+1. Remove all original content
+2. Provide attribution to the original author
+3. Understand that the code is provided without warranty of any kind
+
+---
+
+For permissions, inquiries, or questions, please contact the author.
+

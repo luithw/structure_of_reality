@@ -1,0 +1,47 @@
+# Site settings
+title: Structure of Reality
+description: Chinese American computer scientist, navigating to the origin of intelligence.
+author: Tim Lui
+email: lui.thw@gmail.com
+url: "https://luithw.github.io"
+baseurl: "/structure_of_reality"
+
+# Build settings
+markdown: kramdown
+theme: minima
+permalink: /:year/:month/:day/:title/
+
+# Collections
+collections:
+  posts:
+    output: true
+    permalink: /posts/:year/:month/:day/:title/
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      author: "Tim Lui"
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - scripts/
+  - .github/
+  - README.md
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+

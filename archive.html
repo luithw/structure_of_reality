@@ -1,0 +1,68 @@
+---
+layout: default
+title: Archive
+permalink: /archive/
+---
+
+<div class="archive">
+  <h1 class="page-heading">Archive</h1>
+  <p class="lead">All posts in chronological order</p>
+
+  {% assign postsByYear = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
+  
+  {% for year in postsByYear %}
+    <h2 class="archive-year">{{ year.name }}</h2>
+    <ul class="archive-list">
+      {% for post in year.items %}
+        <li class="archive-item">
+          <time datetime="{{ post.date | date_to_xmlschema }}">
+            {{ post.date | date: "%b %-d" }}
+          </time>
+          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+</div>
+
+<style>
+.archive {
+  padding: 2rem 0;
+}
+
+.archive-year {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+  font-size: 1.8rem;
+}
+
+.archive-list {
+  list-style: none;
+  margin-left: 0;
+}
+
+.archive-item {
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: baseline;
+}
+
+.archive-item time {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  min-width: 60px;
+  margin-right: 1rem;
+}
+
+.archive-item a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.archive-item a:hover {
+  color: var(--secondary-color);
+}
+</style>
+
