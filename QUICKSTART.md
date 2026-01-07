@@ -50,17 +50,7 @@ git push -u origin main
 3. Under "Build and deployment", select **GitHub Actions**
 4. Done! Your site will be live in a few minutes
 
-## Step 5: Set Up Medium (5 minutes)
-
-1. Go to https://medium.com/me/settings
-2. Scroll to "Integration tokens"
-3. Create a token (name it "Structure of Reality Blog")
-4. Copy the token
-5. In your GitHub repo: **Settings** → **Secrets and variables** → **Actions**
-6. Click "New repository secret"
-7. Name: `MEDIUM_INTEGRATION_TOKEN`, Value: (paste token)
-
-## Step 6: Set Up Facebook (10 minutes)
+## Step 5: Set Up Facebook (10 minutes) - Optional
 
 ### Get Facebook Page Access Token
 
@@ -85,13 +75,13 @@ In **Settings** → **Secrets and variables** → **Actions**:
 1. Add secret `FACEBOOK_PAGE_ACCESS_TOKEN`
 2. Add secret `FACEBOOK_PAGE_ID`
 
-## Step 7: Configure Publishing URL (1 minute)
+## Step 6: Configure Publishing URL (1 minute) - Only if using Facebook
 
 In GitHub: **Settings** → **Secrets and variables** → **Actions** → **Variables** tab:
 - Name: `GITHUB_PAGES_URL`
 - Value: `https://yourusername.github.io/structure_of_reality`
 
-## Step 8: Write Your First Post! (∞ minutes)
+## Step 7: Write Your First Post! (∞ minutes)
 
 Create `_posts/2024-01-06-my-first-post.md`:
 
@@ -107,7 +97,7 @@ excerpt: "Beginning my journey into understanding intelligence..."
 Your thoughts here...
 ```
 
-## Step 9: Publish Everything
+## Step 8: Publish Everything
 
 ```bash
 git add _posts/2024-01-06-my-first-post.md
@@ -117,16 +107,14 @@ git push
 
 **That's it!** GitHub Actions will automatically:
 - Deploy to GitHub Pages
-- Publish to Medium
-- Share on Facebook
+- Share on Facebook (if configured)
 
 ## Verification Checklist
 
 After pushing:
 1. ✅ Check GitHub Actions tab (should see green checkmarks)
 2. ✅ Visit your GitHub Pages URL (wait 2-3 minutes)
-3. ✅ Check Medium (look for your post)
-4. ✅ Check Facebook page
+3. ✅ Check Facebook page (if configured)
 
 ## Writing Your Next Post
 
@@ -154,14 +142,13 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-# Set environment variables
-export MEDIUM_INTEGRATION_TOKEN="your_token"
+# Set environment variables (if using Facebook)
 export FACEBOOK_PAGE_ACCESS_TOKEN="your_token"
 export FACEBOOK_PAGE_ID="your_page_id"
 export GITHUB_PAGES_URL="https://yourusername.github.io/structure_of_reality"
 
-# Publish to all platforms
-./publish_all.sh ../_posts/2024-01-06-my-first-post.md
+# Publish to Facebook
+python3 publish_to_facebook.py ../_posts/2024-01-06-my-first-post.md "https://yourusername.github.io/structure_of_reality/2024/01/06/my-first-post/"
 ```
 
 ## Troubleshooting
@@ -170,9 +157,9 @@ export GITHUB_PAGES_URL="https://yourusername.github.io/structure_of_reality"
 - Check GitHub Actions logs for errors
 - Verify `_config.yml` syntax
 
-**Medium/Facebook not working?**
+**Facebook not working?**
 - Verify secrets are set correctly
-- Check tokens haven't expired
+- Check token hasn't expired
 
 **Local Jekyll errors?**
 ```bash

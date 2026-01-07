@@ -28,17 +28,7 @@ Use this checklist to track your progress in setting up the Structure of Reality
 - [ ] Customize `about.md` page
 - [ ] Review and adjust colors in `assets/css/main.css` (optional)
 
-## Medium Integration
-
-- [ ] Create Medium account (if you don't have one)
-- [ ] Go to [Medium Settings](https://medium.com/me/settings)
-- [ ] Generate an integration token
-- [ ] Copy the integration token
-- [ ] Add token to GitHub repository secrets:
-  - [ ] Go to Settings → Secrets and variables → Actions
-  - [ ] Add `MEDIUM_INTEGRATION_TOKEN` secret
-
-## Facebook Integration
+## Facebook Integration (Optional)
 
 - [ ] Create Facebook Page (if you don't have one)
 - [ ] Go to [Facebook Developers](https://developers.facebook.com/)
@@ -69,9 +59,8 @@ Use this checklist to track your progress in setting up the Structure of Reality
 - [ ] Commit and push to GitHub
 - [ ] Verify GitHub Actions workflows run successfully
 - [ ] Check that site is updated on GitHub Pages
-- [ ] Verify post appears on Medium
-- [ ] Verify post is shared on Facebook
-- [ ] Check that post metadata is updated with Medium URL and Facebook post ID
+- [ ] Verify post is shared on Facebook (if configured)
+- [ ] Check that post metadata is updated with Facebook post ID (if applicable)
 
 ## Local Publishing Setup (Optional)
 
@@ -97,7 +86,7 @@ Use this checklist to track your progress in setting up the Structure of Reality
 
 - [ ] Set up a regular posting schedule
 - [ ] Monitor GitHub Actions for any failures
-- [ ] Check Medium and Facebook analytics
+- [ ] Check Facebook analytics (if using)
 - [ ] Update dependencies periodically:
   - [ ] Run `bundle update` for Ruby gems
   - [ ] Run `pip install --upgrade -r requirements.txt` for Python packages

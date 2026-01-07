@@ -36,5 +36,5 @@ Let's navigate to the origin of intelligence together.
 
 ---
 
-*This blog is hosted on GitHub Pages and cross-posted to Medium. Feel free to engage with me on any platform.*
+*This blog is hosted on GitHub Pages. Feel free to engage with me here or on social media.*
 

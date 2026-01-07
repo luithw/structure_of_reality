@@ -103,7 +103,7 @@ Before submitting:
 2. **Test publishing scripts** (if applicable)
    ```bash
    cd scripts
-   python3 publish_to_medium.py ../path/to/test-post.md
+   python3 publish_to_facebook.py ../path/to/test-post.md "https://example.com/post-url"
    ```
 
 3. **Check for errors**

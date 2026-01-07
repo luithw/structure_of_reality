@@ -2,13 +2,13 @@
 
 **Chinese American computer scientist, navigating to the origin of intelligence.**
 
-A personal blog series exploring artificial intelligence, consciousness, and the fundamental nature of intelligence. Hosted on GitHub Pages with automated cross-posting to Medium and Facebook.
+A personal blog series exploring artificial intelligence, consciousness, and the fundamental nature of intelligence. Hosted on GitHub Pages with optional Facebook integration.
 
 ## 🌟 Features
 
 - **Static Site Generator**: Built with Jekyll for fast, secure, and maintainable blog
 - **GitHub Pages Hosting**: Free, reliable hosting with automatic deployments
-- **Automated Publishing**: GitHub Actions workflows automatically publish to Medium and Facebook
+- **Automated Publishing**: Optional GitHub Actions workflows for Facebook integration
 - **Modern Design**: Clean, responsive design optimized for reading
 - **SEO Optimized**: Meta tags, Open Graph, and Twitter Card support
 - **RSS Feed**: Automatic feed generation for subscribers
@@ -89,26 +89,7 @@ url: "https://yourusername.github.io"  # Update with your GitHub username
 baseurl: "/structure_of_reality"
 ```
 
-### 4. Medium Integration Setup
-
-#### Get Medium Integration Token
-
-1. Go to [Medium Settings](https://medium.com/me/settings)
-2. Scroll to "Integration tokens"
-3. Enter a description (e.g., "Structure of Reality Blog")
-4. Click "Get integration token"
-5. Copy the token
-
-#### Configure GitHub Secrets
-
-1. Go to your repository on GitHub
-2. Navigate to **Settings → Secrets and variables → Actions**
-3. Click "New repository secret"
-4. Add secret:
-   - Name: `MEDIUM_INTEGRATION_TOKEN`
-   - Value: Your Medium integration token
-
-### 5. Facebook Integration Setup
+### 4. Facebook Integration Setup (Optional)
 
 #### Create Facebook App and Get Page Access Token
 
@@ -135,13 +116,15 @@ Add these secrets in **Settings → Secrets and variables → Actions**:
 1. `FACEBOOK_PAGE_ACCESS_TOKEN` - Your page access token
 2. `FACEBOOK_PAGE_ID` - Your Facebook page ID
 
-### 6. Configure GitHub Variables
+### 5. Configure GitHub Variables
 
 In **Settings → Secrets and variables → Actions → Variables**:
 
 1. Add variable:
    - Name: `GITHUB_PAGES_URL`
    - Value: `https://yourusername.github.io/structure_of_reality`
+
+*Note: This is only needed if you're using the Facebook integration.*
 
 ## ✍️ Writing Posts
 
@@ -190,7 +173,6 @@ def intelligence():
 - `author`: Author name
 - `tags`: Array of tags for categorization
 - `excerpt`: Short description for previews
-- `medium_status`: "public", "draft", or "unlisted" (for Medium)
 - `canonical_url`: Original URL (auto-set to GitHub Pages URL)
 
 ## 🚀 Publishing Workflow
@@ -201,9 +183,8 @@ When you push a new or updated post to the `main` branch:
 
 1. GitHub Actions detects the change
 2. Jekyll builds and deploys your site to GitHub Pages
-3. The post is automatically published to Medium
-4. A link is shared on your Facebook page
-5. The post metadata is updated with Medium URL and Facebook post ID
+3. A link is shared on your Facebook page (if configured)
+4. The post metadata is updated with Facebook post ID (if applicable)
 
 ### Manual Publishing
 
@@ -221,12 +202,11 @@ You can manually trigger publishing from GitHub:
 # Test locally
 bundle exec jekyll serve --drafts
 
-# Publish manually to Medium only
-cd scripts
-python3 publish_to_medium.py ../_posts/2024-01-15-my-post.md
+# View at http://localhost:4000
 
-# Publish to all platforms
-./publish_all.sh ../_posts/2024-01-15-my-post.md
+# Publish manually to Facebook only (if configured)
+cd scripts
+python3 publish_to_facebook.py ../_posts/2024-01-15-my-post.md "https://yourusername.github.io/structure_of_reality/2024/01/15/my-post/"
 ```
 
 ## ⚙️ Configuration
@@ -235,17 +215,15 @@ python3 publish_to_medium.py ../_posts/2024-01-15-my-post.md
 
 All publishing scripts are in the `scripts/` directory:
 
-- `publish_to_medium.py` - Publishes to Medium
 - `publish_to_facebook.py` - Shares on Facebook
-- `publish_all.sh` - Publishes to all platforms
+- `publish_all.sh` - Publishing helper script
 - `requirements.txt` - Python dependencies
 
 ### Environment Variables
 
-For local testing, create a `.env` file:
+For local testing (if using Facebook integration), create a `.env` file:
 
 ```bash
-export MEDIUM_INTEGRATION_TOKEN="your_token"
 export FACEBOOK_PAGE_ACCESS_TOKEN="your_token"
 export FACEBOOK_PAGE_ID="your_page_id"
 export GITHUB_PAGES_URL="https://yourusername.github.io/structure_of_reality"
@@ -300,10 +278,6 @@ bundle exec jekyll serve
 
 ### Publishing Errors
 
-**Problem**: Medium publishing fails with 401 error
-- Check that `MEDIUM_INTEGRATION_TOKEN` is set correctly
-- Verify token hasn't expired (get a new one from Medium settings)
-
 **Problem**: Facebook publishing fails
 - Verify `FACEBOOK_PAGE_ACCESS_TOKEN` hasn't expired
 - Check that your app has the required permissions
@@ -329,14 +303,13 @@ bundle exec jekyll serve
 
 - [Jekyll Documentation](https://jekyllrb.com/docs/)
 - [GitHub Pages Documentation](https://docs.github.com/en/pages)
-- [Medium API Documentation](https://github.com/Medium/medium-api-docs)
 - [Facebook Graph API](https://developers.facebook.com/docs/graph-api)
 
 ## 📝 Writing Tips
 
 1. **Be Authentic**: This is your personal journal—let your voice shine through
 2. **Regular Schedule**: Consistency helps build an audience
-3. **Engage**: Respond to comments on Medium and Facebook
+3. **Engage**: Respond to comments and engage with your readers
 4. **Cross-link**: Reference previous posts to build a narrative
 5. **Draft First**: Use `_drafts/` folder for works in progress
 
@@ -363,10 +336,9 @@ and provide attribution.
 
 1. ✅ Set up your GitHub repository
 2. ✅ Configure GitHub Pages
-3. ✅ Set up Medium integration
-4. ✅ Set up Facebook integration
-5. ✅ Write your first post
-6. ✅ Push to GitHub and watch it deploy!
+3. ✅ Set up Facebook integration (optional)
+4. ✅ Write your first post
+5. ✅ Push to GitHub and watch it deploy!
 
 **Happy writing! May your exploration of intelligence and reality be fruitful.**
 

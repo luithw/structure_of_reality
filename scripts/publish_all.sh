@@ -57,18 +57,6 @@ else
     source "$SCRIPT_DIR/venv/bin/activate"
 fi
 
-# Publish to Medium
-echo "=========================================="
-echo "Publishing to Medium..."
-echo "=========================================="
-if python3 "$SCRIPT_DIR/publish_to_medium.py" "$POST_FILE"; then
-    echo "✅ Published to Medium"
-else
-    echo "⚠️  Failed to publish to Medium"
-fi
-
-echo ""
-
 # Publish to Facebook
 echo "=========================================="
 echo "Publishing to Facebook..."
