@@ -36,7 +36,7 @@ A personal blog series exploring artificial intelligence, consciousness, and the
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/structure_of_reality.git
+   git clone https://github.com/luithw/structure_of_reality.git
    cd structure_of_reality
    ```
 
@@ -64,7 +64,7 @@ A personal blog series exploring artificial intelligence, consciousness, and the
    git add .
    git commit -m "Initial commit: Structure of Reality blog"
    git branch -M main
-   git remote add origin https://github.com/yourusername/structure_of_reality.git
+   git remote add origin https://github.com/luithw/structure_of_reality.git
    git push -u origin main
    ```
 
@@ -74,7 +74,7 @@ A personal blog series exploring artificial intelligence, consciousness, and the
 2. Navigate to **Settings → Pages**
 3. Under "Build and deployment":
    - Source: Select "GitHub Actions"
-4. Your site will be available at `https://yourusername.github.io/structure_of_reality`
+4. Your site will be available at `https://luithw.github.io/structure_of_reality`
 
 ### 3. Update Site Configuration
 
@@ -83,9 +83,9 @@ Edit `_config.yml`:
 ```yaml
 title: Structure of Reality
 description: Chinese American computer scientist, navigating to the origin of intelligence.
-author: Your Name
-email: your-email@example.com
-url: "https://yourusername.github.io"  # Update with your GitHub username
+author: Tim Lui
+email: lui.thw@gmail.com
+url: "https://luithw.github.io"
 baseurl: "/structure_of_reality"
 ```
 
@@ -122,7 +122,7 @@ In **Settings → Secrets and variables → Actions → Variables**:
 
 1. Add variable:
    - Name: `GITHUB_PAGES_URL`
-   - Value: `https://yourusername.github.io/structure_of_reality`
+   - Value: `https://luithw.github.io/structure_of_reality`
 
 *Note: This is only needed if you're using the Facebook integration.*
 
@@ -141,7 +141,7 @@ In **Settings → Secrets and variables → Actions → Variables**:
 layout: post
 title: "Your Post Title"
 date: 2024-01-15 10:00:00 -0000
-author: Your Name
+author: Tim Lui
 tags: [AI, machine-learning, consciousness]
 excerpt: "A brief summary of your post (appears in listings and social media)"
 ---
@@ -206,7 +206,7 @@ bundle exec jekyll serve --drafts
 
 # Publish manually to Facebook only (if configured)
 cd scripts
-python3 publish_to_facebook.py ../_posts/2024-01-15-my-post.md "https://yourusername.github.io/structure_of_reality/2024/01/15/my-post/"
+python3 publish_to_facebook.py ../_posts/2024-01-15-my-post.md "https://luithw.github.io/structure_of_reality/2024/01/15/my-post/"
 ```
 
 ## ⚙️ Configuration
@@ -226,7 +226,7 @@ For local testing (if using Facebook integration), create a `.env` file:
 ```bash
 export FACEBOOK_PAGE_ACCESS_TOKEN="your_token"
 export FACEBOOK_PAGE_ID="your_page_id"
-export GITHUB_PAGES_URL="https://yourusername.github.io/structure_of_reality"
+export GITHUB_PAGES_URL="https://luithw.github.io/structure_of_reality"
 ```
 
 Load it before running scripts:

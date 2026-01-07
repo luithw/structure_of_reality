@@ -23,9 +23,9 @@ Edit `_config.yml`:
 
 ```yaml
 title: Structure of Reality
-author: Tim  # Your actual name
-email: your-email@example.com
-url: "https://yourusername.github.io"  # Replace 'yourusername'
+author: Tim Lui
+email: lui.thw@gmail.com
+url: "https://luithw.github.io"
 baseurl: "/structure_of_reality"
 ```
 
@@ -38,7 +38,7 @@ git add .
 git commit -m "Initial commit: Structure of Reality blog"
 
 # Create repository on GitHub, then:
-git remote add origin https://github.com/yourusername/structure_of_reality.git
+git remote add origin https://github.com/luithw/structure_of_reality.git
 git branch -M main
 git push -u origin main
 ```
@@ -78,8 +78,8 @@ In **Settings** → **Secrets and variables** → **Actions**:
 ## Step 6: Configure Publishing URL (1 minute) - Only if using Facebook
 
 In GitHub: **Settings** → **Secrets and variables** → **Actions** → **Variables** tab:
-- Name: `GITHUB_PAGES_URL`
-- Value: `https://yourusername.github.io/structure_of_reality`
+- Name: `PAGES_URL`
+- Value: `https://luithw.github.io/structure_of_reality`
 
 ## Step 7: Write Your First Post! (∞ minutes)
 
@@ -145,10 +145,10 @@ pip install -r requirements.txt
 # Set environment variables (if using Facebook)
 export FACEBOOK_PAGE_ACCESS_TOKEN="your_token"
 export FACEBOOK_PAGE_ID="your_page_id"
-export GITHUB_PAGES_URL="https://yourusername.github.io/structure_of_reality"
+export GITHUB_PAGES_URL="https://luithw.github.io/structure_of_reality"  # Note: for GitHub Actions, use PAGES_URL variable
 
 # Publish to Facebook
-python3 publish_to_facebook.py ../_posts/2024-01-06-my-first-post.md "https://yourusername.github.io/structure_of_reality/2024/01/06/my-first-post/"
+python3 publish_to_facebook.py ../_posts/2024-01-06-my-first-post.md "https://luithw.github.io/structure_of_reality/2024/01/06/my-first-post/"
 ```
 
 ## Troubleshooting

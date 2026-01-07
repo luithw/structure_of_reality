@@ -30,7 +30,7 @@ if [ -n "$GITHUB_PAGES_URL" ]; then
     BASE_URL="$GITHUB_PAGES_URL"
 else
     # Fallback to default (user should set this)
-    BASE_URL="${GITHUB_PAGES_URL:-https://yourusername.github.io/structure_of_reality}"
+    BASE_URL="${GITHUB_PAGES_URL:-https://luithw.github.io/structure_of_reality}"
 fi
 
 # Convert date to URL format (YYYY/MM/DD)

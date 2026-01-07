@@ -21,7 +21,7 @@ If you find a bug or have a suggestion:
 
 1. **Fork the repository**
    ```bash
-   git clone https://github.com/yourusername/structure_of_reality.git
+   git clone https://github.com/luithw/structure_of_reality.git
    cd structure_of_reality
    ```
 
