@@ -7,7 +7,7 @@ layout: default
     <h1 class="post-title">{{ page.title | escape }}</h1>
     <p class="post-meta">
       <time datetime="{{ page.date | date_to_xmlschema }}">
-        {{ page.date | date: "%B %-d, %Y" }}
+        {{ page.date | date: "%B %-d, %Y at %-I:%M %p" }}
       </time>
       {% if page.author %}
         • <span>{{ page.author }}</span>
