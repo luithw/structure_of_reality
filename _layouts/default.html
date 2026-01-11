@@ -213,6 +213,27 @@
             }
         }
     </script>
+
+    <!-- Local Timezone Conversion -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.local-time').forEach(function(timeEl) {
+                const datetime = timeEl.getAttribute('datetime');
+                if (datetime) {
+                    const date = new Date(datetime);
+                    const options = {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                    };
+                    timeEl.textContent = date.toLocaleString(undefined, options);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 

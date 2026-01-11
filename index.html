@@ -13,7 +13,7 @@ title: Home
           </a>
         </h2>
         <p class="post-meta">
-          <time datetime="{{ post.date | date_to_xmlschema }}">
+          <time class="local-time" datetime="{{ post.date | date_to_xmlschema }}">
             {{ post.date | date: "%B %-d, %Y at %-I:%M %p" }}
           </time>
           {% if post.author %}
