@@ -305,6 +305,18 @@ bundle exec jekyll serve
 - [GitHub Pages Documentation](https://docs.github.com/en/pages)
 - [Facebook Graph API](https://developers.facebook.com/docs/graph-api)
 
+## 📖 Content Roadmap
+
+Planned blog post topics exploring intelligence, consciousness, and reality:
+
+1. What is Structure of Reality?
+2. The Spatial Hypothesis of Intelligence
+3. Artificial Spatial Intelligence
+4. Spatial Temporal Reasoning Model
+5. Forage, Avoid, Home
+6. The automation of science
+7. (TBD)
+
 ## 📝 Writing Tips
 
 1. **Be Authentic**: This is your personal journal—let your voice shine through
