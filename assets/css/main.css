@@ -50,8 +50,15 @@ body {
     opacity: 0.8;
 }
 
+.site-subtitle {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.95rem;
+    font-style: italic;
+    margin: 0.25rem 0 0.5rem 0;
+}
+
 .site-nav {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
 }
 
 .site-nav a {

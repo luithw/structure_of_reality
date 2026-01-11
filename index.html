@@ -4,9 +4,6 @@ title: Home
 ---
 
 <div class="home">
-  <h1 class="page-heading">Structure of Reality</h1>
-  <p class="lead">{{ site.description }}</p>
-
   <div class="posts">
     {% for post in site.posts %}
       <article class="post-preview">
@@ -17,7 +14,7 @@ title: Home
         </h2>
         <p class="post-meta">
           <time datetime="{{ post.date | date_to_xmlschema }}">
-            {{ post.date | date: "%B %-d, %Y" }}
+            {{ post.date | date: "%B %-d, %Y at %-I:%M %p" }}
           </time>
           {% if post.author %}
             • <span>{{ post.author }}</span>
