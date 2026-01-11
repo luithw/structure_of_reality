@@ -38,10 +38,35 @@ exclude:
   - scripts/
   - .github/
   - README.md
+  - FEATURES.md
 
 # Plugins
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
   - jekyll-sitemap
+
+# =============================================================================
+# FEATURES CONFIGURATION
+# =============================================================================
+
+# GitHub repository for Utterances comments
+# Format: username/repository
+github_repo: luithw/structure_of_reality
+
+# Newsletter (Buttondown)
+# Sign up at: https://buttondown.email
+# Your Buttondown username (from your Buttondown URL)
+buttondown_username: structureofreality
+
+# Firebase Authentication
+# Create a project at: https://console.firebase.google.com
+# Enable Authentication and add your domain to authorized domains
+# Replace these with your actual Firebase config values
+firebase_api_key: YOUR_API_KEY
+firebase_auth_domain: YOUR_PROJECT.firebaseapp.com
+firebase_project_id: YOUR_PROJECT_ID
+firebase_storage_bucket: YOUR_PROJECT.appspot.com
+firebase_messaging_sender_id: YOUR_SENDER_ID
+firebase_app_id: YOUR_APP_ID
 

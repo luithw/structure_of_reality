@@ -1,4 +1,4 @@
-name: Publish Blog Post
+name: Notify New Blog Post
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
         required: true
 
 jobs:
-  publish:
+  notify:
     runs-on: ubuntu-latest
     
     steps:
@@ -51,12 +51,10 @@ jobs:
             fi
           fi
       
-      - name: Publish to Medium and Facebook
+      - name: Send Email Notification to Subscribers
         if: steps.changed_posts.outputs.posts != ''
         env:
-          MEDIUM_INTEGRATION_TOKEN: ${{ secrets.MEDIUM_INTEGRATION_TOKEN }}
-          FACEBOOK_PAGE_ACCESS_TOKEN: ${{ secrets.FACEBOOK_PAGE_ACCESS_TOKEN }}
-          FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
           GITHUB_PAGES_URL: ${{ vars.PAGES_URL }}
         run: |
           POSTS="${{ steps.changed_posts.outputs.posts }}"
@@ -64,7 +62,7 @@ jobs:
           for POST_FILE in $POSTS; do
             if [ -f "$POST_FILE" ]; then
               echo "=========================================="
-              echo "Publishing: $POST_FILE"
+              echo "Sending email notification for: $POST_FILE"
               echo "=========================================="
               
               # Extract post metadata for URL construction
@@ -78,30 +76,44 @@ jobs:
               
               POST_URL="${GITHUB_PAGES_URL}/${YEAR}/${MONTH}/${DAY}/${POST_SLUG}/"
               
-              # Publish to Medium
-              echo "Publishing to Medium..."
-              python3 scripts/publish_to_medium.py "$POST_FILE" || echo "⚠️  Medium publishing failed"
-              
-              # Publish to Facebook
-              echo "Publishing to Facebook..."
-              python3 scripts/publish_to_facebook.py "$POST_FILE" "$POST_URL" || echo "⚠️  Facebook publishing failed"
+              python3 scripts/send_email_notification.py "$POST_FILE" "$POST_URL" || echo "⚠️  Email notification failed"
               
               echo ""
             fi
           done
       
-      - name: Commit updated post metadata
+      - name: Send SMS/WhatsApp Alerts
         if: steps.changed_posts.outputs.posts != ''
+        env:
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+          TWILIO_PHONE_NUMBER: ${{ secrets.TWILIO_PHONE_NUMBER }}
+          TWILIO_WHATSAPP_NUMBER: ${{ secrets.TWILIO_WHATSAPP_NUMBER }}
+          NOTIFICATION_PHONE_NUMBERS: ${{ secrets.NOTIFICATION_PHONE_NUMBERS }}
+          NOTIFICATION_CHANNELS: ${{ vars.NOTIFICATION_CHANNELS }}
+          GITHUB_PAGES_URL: ${{ vars.PAGES_URL }}
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add _posts/
-          git diff --staged --quiet || git commit -m "Update post metadata with Medium/Facebook URLs"
-      
-      - name: Push changes
-        if: steps.changed_posts.outputs.posts != ''
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
-
+          POSTS="${{ steps.changed_posts.outputs.posts }}"
+          
+          for POST_FILE in $POSTS; do
+            if [ -f "$POST_FILE" ]; then
+              echo "=========================================="
+              echo "Sending SMS/WhatsApp alerts for: $POST_FILE"
+              echo "=========================================="
+              
+              # Extract post metadata for URL construction
+              FILENAME=$(basename "$POST_FILE")
+              POST_DATE=$(echo "$FILENAME" | grep -oE '^[0-9]{4}-[0-9]{2}-[0-9]{2}')
+              POST_SLUG=$(echo "$FILENAME" | sed -E 's/^[0-9]{4}-[0-9]{2}-[0-9]{2}-(.*)\.md$/\1/')
+              
+              YEAR=$(echo "$POST_DATE" | cut -d'-' -f1)
+              MONTH=$(echo "$POST_DATE" | cut -d'-' -f2)
+              DAY=$(echo "$POST_DATE" | cut -d'-' -f3)
+              
+              POST_URL="${GITHUB_PAGES_URL}/${YEAR}/${MONTH}/${DAY}/${POST_SLUG}/"
+              
+              python3 scripts/send_sms_notification.py "$POST_FILE" "$POST_URL" || echo "⚠️  SMS/WhatsApp notification failed"
+              
+              echo ""
+            fi
+          done

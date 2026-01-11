@@ -39,6 +39,19 @@ layout: default
   </footer>
 </article>
 
+<!-- Comments Section (Utterances - GitHub-based) -->
+<section class="comments-section">
+  <h2>Comments</h2>
+  <p class="comments-note">Sign in with GitHub to leave a comment. All comments are stored as GitHub issues.</p>
+  <script src="https://utteranc.es/client.js"
+          repo="{{ site.github_repo | default: 'luithw/structure_of_reality' }}"
+          issue-term="pathname"
+          theme="github-light"
+          crossorigin="anonymous"
+          async>
+  </script>
+</section>
+
 <div class="post-navigation">
   {% if page.previous.url %}
     <a class="prev" href="{{ page.previous.url | relative_url }}">&larr; {{ page.previous.title }}</a>

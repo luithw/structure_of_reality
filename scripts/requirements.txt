@@ -1,4 +1,5 @@
 requests>=2.31.0
 PyYAML>=6.0.1
 markdown2>=2.4.10
+twilio>=9.0.0
 

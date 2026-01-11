@@ -1,5 +1,5 @@
 #!/bin/bash
-# Publish a blog post to all platforms
+# Send notifications for a new blog post
 #
 # Usage: ./publish_all.sh <post_file.md>
 
@@ -41,7 +41,7 @@ DAY=$(echo "$POST_DATE" | cut -d'-' -f3)
 POST_URL="${BASE_URL}/${YEAR}/${MONTH}/${DAY}/${POST_SLUG}/"
 
 echo "=========================================="
-echo "Publishing Post"
+echo "Sending Notifications for New Post"
 echo "=========================================="
 echo "File: $POST_FILE"
 echo "URL: $POST_URL"
@@ -57,24 +57,34 @@ else
     source "$SCRIPT_DIR/venv/bin/activate"
 fi
 
-# Publish to Facebook
+# Send email notification
 echo "=========================================="
-echo "Publishing to Facebook..."
+echo "Sending Email Notification..."
 echo "=========================================="
-if python3 "$SCRIPT_DIR/publish_to_facebook.py" "$POST_FILE" "$POST_URL"; then
-    echo "✅ Published to Facebook"
+if python3 "$SCRIPT_DIR/send_email_notification.py" "$POST_FILE" "$POST_URL"; then
+    echo "✅ Email notification sent"
 else
-    echo "⚠️  Failed to publish to Facebook"
+    echo "⚠️  Failed to send email notification"
+fi
+
+echo ""
+
+# Send SMS/WhatsApp alerts
+echo "=========================================="
+echo "Sending SMS/WhatsApp Alerts..."
+echo "=========================================="
+if python3 "$SCRIPT_DIR/send_sms_notification.py" "$POST_FILE" "$POST_URL"; then
+    echo "✅ SMS/WhatsApp alerts sent"
+else
+    echo "⚠️  Failed to send SMS/WhatsApp alerts"
 fi
 
 echo ""
 echo "=========================================="
-echo "Publishing Complete!"
+echo "Notifications Complete!"
 echo "=========================================="
-echo "Your post is now available at:"
+echo "Your post is available at:"
 echo "  GitHub Pages: $POST_URL"
 echo ""
-echo "Remember to commit and push the changes to GitHub!"
 
 deactivate
-
