@@ -81,7 +81,7 @@ body {
 
 /* Home Page */
 .home {
-    padding: var(--spacing) 0;
+    padding: 0 0 var(--spacing) 0;
 }
 
 .page-heading {
