@@ -13,7 +13,7 @@ What is the structure of reality?
 
 This is the question that the biological brain is asking. The brain exists to predict the dynamic environment. It builds models of reality so that animals can better navigate their surroundings and make predictions that enhance their survival advantage.
 
-This fundamental question, what is the structure of reality, is also what inspired the name of this blog series: *Structure of Reality*.
+This fundamental question, what is the structure of reality, is also what inspired the name of this journal: *Structure of Reality*.
 
 This is one of my own "chain of thoughts" on the origin of intelligence. Intelligence evolved to allow animals to better navigate the dynamic environment. But what exactly is this origin? Or rather, a better question is, where exactly is the origin of intelligence?
 
