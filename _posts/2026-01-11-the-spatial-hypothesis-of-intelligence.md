@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "The Spatial Hypothesis of Intelligence"
-date: 2026-01-11 03:05:51 -0800
+date: 2026-01-11 20:19:00 -0800
 author: Tim
 tags: [intelligence, neuroscience, spatial cognition, place cells, AGI]
 excerpt: "Intelligence emerged from the need to navigate space. The brain's original purpose was to solve the computational challenge of moving effectively through a dynamic environment."
