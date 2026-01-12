@@ -21,7 +21,7 @@ When the need for navigation is gone, the brain disappears.
 
 Why do we need a brain in order to move, you might ask.
 Because we don't just move randomly. 
-Movement is tiring, it expends energy. 
+Moving is tiring, it expends energy. 
 We only move when we have to.
 
 When do animals move?
@@ -78,6 +78,6 @@ I believe that the computational challenges of navigation in a dynamic environme
 Spatial intelligence is the foundation from which all other forms of intelligence emerge.
 If we can solve spatial intelligence, then we can solve general intelligence. 
 
-I believe this is the correct pathway towards Artificial General Intelligence, by solving the problem of Spatial Intelligence. 
+I believe this is the correct pathway towards Artificial General Intelligence, by creating Artificial Spatial Intelligence. 
 
 This is the Spatial Hypothesis of Intelligence.
