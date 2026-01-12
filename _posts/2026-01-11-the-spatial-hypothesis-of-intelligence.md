@@ -31,9 +31,9 @@ To forage and to avoid predators.
 
 This is why animals evolved the capability to move. 
 The brain evolved to solve three fundamental questions of movement:
-1. When to move
-2. How to move
-3. Where to move to
+1. When to move?
+2. How to move?
+3. Where to move to?
 
 Intelligence emerged from these computational challenges. 
 Animals evolved from tracing simple chemical gradients to developing sophisticated spatial intelligence.
@@ -56,7 +56,7 @@ What remains invariant is not a feature or a sequence, but where the animal is.
 This stability revealed the hippocampus as a true spatial map, a coordinate system onto which experience is organized.
 
 This discovery is profound, because it was the first demonstration that a learning system grounds its learning to fixed locations in space, as best as the sensory system can capture.
-The biological brain can solve the computationally hard problem of localization in a dynamic environment.
+The biological brain can solve the computationally challenging problem of localization in a dynamic environment.
 
 Understanding how place cells emerge was the central question of my PhD thesis.
 I built computational models demonstrating that place cells can emerge spontaneously from the computational demand of perspective transformation.
