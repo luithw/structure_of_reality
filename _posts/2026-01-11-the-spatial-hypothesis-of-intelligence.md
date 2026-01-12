@@ -79,11 +79,8 @@ How does our internal cognitive map not just record our position, but track wher
 
 To navigate well in a changing world you need, at minimum:
 1. A compact internal state (a map) that stays stable as sensory input changes.
-
 2. The ability to plan: choose actions that lead to goals over time.
 3. The ability to update the map when the world changes.
-
-
 
 The problem of navigation in a dynamic environment is the original problem presented to the brain.
 This is the origin of intelligence.
