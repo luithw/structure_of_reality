@@ -58,8 +58,8 @@ What remains invariant is not a feature or a sequence, but where the animal is.
 This stability revealed the hippocampus as a true spatial map, a coordinate system onto which experience is organized.
 
 This discovery is profound because it demonstrates something more general than “rats know where they are.”
-It shows that a learning system can build a stable internal state that remains meaningful even when raw sensory input changes.
-That is the core requirement for planning: if your internal state collapses every time the lighting changes, you can't build a world-model you can reuse.
+It shows for the first time that a learning system grounds its learning to fixed locations in space, as best as the sensory system can capture.
+
 
 In that sense, spatial mapping is not a narrow subsystem.
 It is a concrete example of the most general problem in intelligence: constructing latent variables that make the world predictable and actionable.
@@ -77,17 +77,15 @@ But the environment is dynamic, the location of food keeps changing, new threats
 How does the brain solve these harder problems?
 How does our internal cognitive map not just record our position, but track where food is and where home is, even as everything shifts?
 
-This is where “navigation” stops being a metaphor and becomes a definition.
 To navigate well in a changing world you need, at minimum:
 1. A compact internal state (a map) that stays stable as sensory input changes.
-2. The ability to predict the consequences of actions.
-3. The ability to plan: choose actions that lead to goals over time.
-4. The ability to update the map when the world changes.
 
-Those are also the core ingredients of intelligence.
-Navigation is simply the domain where these ingredients are unavoidable and brutally testable.
+2. The ability to plan: choose actions that lead to goals over time.
+3. The ability to update the map when the world changes.
 
-So the problem of navigation in a dynamic environment is the original problem presented to the brain.
+
+
+The problem of navigation in a dynamic environment is the original problem presented to the brain.
 This is the origin of intelligence.
 Intelligence is, at root, the machinery of navigation, generalized beyond physical space.
 
