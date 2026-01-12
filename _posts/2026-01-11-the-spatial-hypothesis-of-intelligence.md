@@ -78,6 +78,6 @@ I believe that the computational challenges of navigation in a dynamic environme
 Spatial intelligence is the foundation from which all other forms of intelligence emerge.
 If we can solve spatial intelligence, then we can solve general intelligence. 
 
-I believe this is the correct pathway towards Artificial General Intelligence, by creating Artificial Spatial Intelligence. 
+I believe the correct pathway towards Artificial General Intelligence is to create Artificial Spatial Intelligence.
 
 This is the Spatial Hypothesis of Intelligence.
