@@ -84,7 +84,8 @@ To navigate well in a changing world you need, at minimum:
 
 The problem of navigation in a dynamic environment is the original problem presented to the brain.
 This is the origin of intelligence.
-Intelligence is, at root, the machinery of navigation, generalized beyond physical space.
+Intelligence *is* navigation.
+
 
 Once you have a system that can build and update a cognitive map, you can reuse the same machinery to navigate abstract spaces.
 You can navigate tasks, moving through states and subgoals, and you can navigate concepts, moving through relations and categories.
