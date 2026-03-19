@@ -9,13 +9,7 @@ baseurl: "/structure_of_reality"
 # Build settings
 markdown: kramdown
 theme: minima
-permalink: /:year/:month/:day/:title/
-
-# Collections
-collections:
-  posts:
-    output: true
-    permalink: /posts/:year/:month/:day/:title/
+permlink: /:year/:month/:day/:title/
 
 # Defaults
 defaults:
@@ -69,4 +63,3 @@ firebase_project_id: YOUR_PROJECT_ID
 firebase_storage_bucket: YOUR_PROJECT.appspot.com
 firebase_messaging_sender_id: YOUR_SENDER_ID
 firebase_app_id: YOUR_APP_ID
-
