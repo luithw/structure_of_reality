@@ -658,14 +658,120 @@ body {
 }
 
 .comments-section h2 {
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
     color: var(--primary-color);
 }
 
-.comments-note {
+/* Comment List */
+#comments-list {
+    margin-bottom: 2rem;
+}
+
+.no-comments {
     color: #666;
+    font-style: italic;
+}
+
+.comment-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.comment-item:last-child {
+    border-bottom: none;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.5rem;
+}
+
+.comment-author {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.comment-date {
+    color: #999;
+    font-size: 0.85rem;
+}
+
+.comment-body {
+    color: #444;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Comment Form */
+.comment-form {
+    background: var(--light-gray);
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.comment-form h3 {
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.comment-field {
+    margin-bottom: 1rem;
+}
+
+.comment-field label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.comment-field input,
+.comment-field textarea {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 0.95rem;
+    font-family: inherit;
+}
+
+.comment-field input:focus,
+.comment-field textarea:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.comment-error {
+    color: #e74c3c;
     font-size: 0.9rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.75rem;
+    min-height: 1.2em;
+}
+
+.comment-submit {
+    padding: 0.6rem 1.5rem;
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.comment-submit:hover {
+    opacity: 0.9;
+}
+
+.comment-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 /* Responsive Design */

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Comments Test</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .test-section { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Comments System Diagnostic Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: API Connectivity</h2>
+        <div id="test1">Testing...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: Load Comments</h2>
+        <div id="test2">Testing...</div>
+    </div>
+    
+    <script>
+        fetch('/api/comments?post_slug=/test')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('test1').innerHTML = '<span class="success">✓ API works! ' + data.comments.length + ' comments in DB</span>';
+            })
+            .catch(err => {
+                document.getElementById('test1').innerHTML = '<span class="error">✗ API Error: ' + err.message + '</span>';
+            });
+        
+        setTimeout(() => {
+            fetch('/api/comments?post_slug=/2026/04/26/from-surviving-to-foraging')
+                .then(r => r.json())
+                .then(data => {
+                    let html = '<span class="success">✓ Loaded ' + data.comments.length + ' comments</span><br>';
+                    data.comments.slice(-3).forEach(c => {
+                        html += '<strong>' + c.author_name + ':</strong> ' + c.body.substring(0, 60) + '...<br>';
+                    });
+                    document.getElementById('test2').innerHTML = html;
+                })
+                .catch(err => {
+                    document.getElementById('test2').innerHTML = '<span class="error">✗ Error: ' + err.message + '</span>';
+                });
+        }, 500);
+    </script>
+</body>
+</html>

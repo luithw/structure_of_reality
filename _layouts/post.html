@@ -39,18 +39,111 @@ layout: default
   </footer>
 </article>
 
-<!-- Comments Section (Utterances - GitHub-based) -->
+<!-- Comments Section -->
 <section class="comments-section">
   <h2>Comments</h2>
-  <p class="comments-note">Sign in with GitHub to leave a comment. All comments are stored as GitHub issues.</p>
-  <script src="https://utteranc.es/client.js"
-          repo="{{ site.github_repo | default: 'luithw/structure_of_reality' }}"
-          issue-term="pathname"
-          theme="github-light"
-          crossorigin="anonymous"
-          async>
-  </script>
+  <div id="comments-container">
+    <p id="comments-loading">Loading comments...</p>
+    <p id="comments-error" style="display:none; color: red;">Unable to load comments. Please try again later.</p>
+    <div id="comments-list"></div>
+  </div>
+  <div class="comment-form">
+    <h3>Leave a Comment</h3>
+    <p id="comment-post-error" style="display:none; color: red;"></p>
+    <input type="text" id="comment-name" placeholder="Your name" required>
+    <textarea id="comment-body" placeholder="Your comment" required></textarea>
+    <button id="comment-submit">Post Comment</button>
+  </div>
 </section>
+
+<script>
+(function() {
+  // Always use relative path — Tayis reverse proxy routes /api to the comments service
+  var apiBase = '';
+  var slug = window.location.pathname.replace(/\.html$/, '');
+  var listEl = document.getElementById('comments-list');
+  var loadingEl = document.getElementById('comments-loading');
+  var errEl = document.getElementById('comments-error');
+  var postErrEl = document.getElementById('comment-post-error');
+
+  function formatDate(ts) {
+    var d = new Date(ts * 1000);
+    return d.toLocaleString();
+  }
+
+  function loadComments() {
+    loadingEl.style.display = 'block';
+    errEl.style.display = 'none';
+    listEl.innerHTML = '';
+
+    fetch(apiBase + '/api/comments?post_slug=' + encodeURIComponent(slug))
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!data.comments || data.comments.length === 0) {
+          loadingEl.style.display = 'none';
+          listEl.innerHTML = '<p>No comments yet. Be the first!</p>';
+          return;
+        }
+        loadingEl.style.display = 'none';
+        data.comments.forEach(function(c) {
+          var div = document.createElement('div');
+          div.className = 'comment';
+          div.innerHTML = '<div class="comment-header"><strong>' + c.author_name + '</strong> • <time>' + formatDate(c.created_at) + '</time></div><div class="comment-body">' + c.body + '</div>';
+          listEl.appendChild(div);
+        });
+      })
+      .catch(function() {
+        loadingEl.style.display = 'none';
+        errEl.style.display = 'block';
+      });
+  }
+
+  document.getElementById('comment-submit').onclick = function() {
+    var nameInput = document.getElementById('comment-name');
+    var bodyInput = document.getElementById('comment-body');
+    var submitBtn = document.getElementById('comment-submit');
+
+    var name = nameInput.value.trim();
+    var body = bodyInput.value.trim();
+    if (!name || !body) return;
+
+    postErrEl.textContent = '';
+    postErrEl.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Posting...';
+
+    fetch(apiBase + '/comments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ post_slug: slug, author_name: name, body: body })
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.error) {
+          postErrEl.textContent = data.error;
+          postErrEl.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Post Comment';
+          return;
+        }
+        nameInput.value = '';
+        bodyInput.value = '';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Post Comment';
+        loadComments();
+      })
+      .catch(function(err) {
+        console.error('Error posting comment:', err);
+        postErrEl.textContent = 'Something went wrong. Please try again.';
+        postErrEl.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Post Comment';
+      });
+  };
+
+  loadComments();
+})();
+</script>
 
 <div class="post-navigation">
   {% if page.previous.url %}
@@ -60,4 +153,3 @@ layout: default
     <a class="next" href="{{ page.next.url | relative_url }}">{{ page.next.title }} &rarr;</a>
   {% endif %}
 </div>
-

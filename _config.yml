@@ -1,10 +1,11 @@
+---
 # Site settings
 title: Structure of Reality
 description: Chinese American computer scientist, navigating to the origin of intelligence.
 author: Tim Lui
 email: lui.thw@gmail.com
 url: "https://luithw.github.io"
-baseurl: "/structure_of_reality"
+baseurl: ""
 
 # Build settings
 markdown: kramdown
@@ -63,3 +64,9 @@ firebase_project_id: YOUR_PROJECT_ID
 firebase_storage_bucket: YOUR_PROJECT.appspot.com
 firebase_messaging_sender_id: YOUR_SENDER_ID
 firebase_app_id: YOUR_APP_ID
+
+# Comments API URL
+# The backend server that handles comment storage
+# Use relative URL /api so it works in both local Preview and public Tayis environments
+# Tayis reverse proxy will route /api/* requests to the comments service on port 8080
+comments_api_url: /api
