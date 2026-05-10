@@ -58,9 +58,12 @@ layout: default
 
 <script>
 (function() {
-  // Always use relative path — Tayis reverse proxy routes /api to the comments service
-  var apiBase = '';
+  // Compute API base dynamically:
+  //   Tayis: /u/tim-lui/p/structure-of-reality/2026/...  -> apiBase = /u/tim-lui/p/structure-of-reality
+  //   Local: /2026/...                                     -> apiBase = '' (empty = root /api)
   var slug = window.location.pathname.replace(/\.html$/, '');
+  var postPathMatch = slug.match(/^(.+?)\/(\d{4}\/\d{2}\/\d{2}\/.+)$/);
+  var apiBase = postPathMatch ? postPathMatch[1] || '' : '';
   var listEl = document.getElementById('comments-list');
   var loadingEl = document.getElementById('comments-loading');
   var errEl = document.getElementById('comments-error');
@@ -112,7 +115,7 @@ layout: default
     submitBtn.disabled = true;
     submitBtn.textContent = 'Posting...';
 
-    fetch(apiBase + '/comments', {
+    fetch(apiBase + '/api/comments', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ post_slug: slug, author_name: name, body: body })
