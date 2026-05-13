@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Chinese American computer scientist, navigating to the origin of intelligence.">
+    <meta name="author" content="Tim Lui">
+    <title>Structure of Reality</title>
+    
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="alternate" type="application/rss+xml" title="Structure of Reality" href="/feed.xml">
+</head>
+<body>
+    <header class="site-header">
+        <div class="wrapper header-wrapper">
+            <div class="header-left">
+                <a class="site-title" href="/">Structure of Reality</a>
+                <p class="site-subtitle">Chinese American computer scientist, navigating to the origin of intelligence.</p>
+                <nav class="site-nav">
+                    <a href="/">Home</a>
+                    <a href="/about/">About</a>
+                    <a href="/archive/">Archive</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <div class="wrapper">
+            {{ CONTENT_PLACEHOLDER }}
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="wrapper">
+            <!-- Newsletter Subscription -->
+            <div class="newsletter-section">
+                <h3>📬 Subscribe to Newsletter</h3>
+                <p>Get notified when I publish new articles. No spam, unsubscribe anytime.</p>
+                <form class="newsletter-form" action="https://buttondown.email/api/emails/embed-subscribe/structureofreality" method="post" target="popupwindow" onsubmit="window.open('https://buttondown.email/structureofreality', 'popupwindow')">
+                    <input type="email" name="email" placeholder="Enter your email" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+                <p class="newsletter-note">Powered by <a href="https://buttondown.email" target="_blank">Buttondown</a></p>
+            </div>
+            
+            <div class="footer-main">
+                <p>Chinese American computer scientist, navigating to the origin of intelligence.</p>
+                <p class="copyright">&copy; 2026 Tim Lui. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Local Timezone Conversion -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.local-time').forEach(function(timeEl) {
+                const datetime = timeEl.getAttribute('datetime');
+                if (datetime) {
+                    const date = new Date(datetime);
+                    const options = {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                    };
+                    timeEl.textContent = date.toLocaleString(undefined, options);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
