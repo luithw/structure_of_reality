@@ -33,10 +33,6 @@ Environment variables:
   SMTP_USE_TLS       1/true to start TLS (default: 1)
 
   EMAIL_FROM         From email address (optional; falls back to _config.yml: email: or 'lui.thw@gmail.com')
-
-Notes:
-- No unsubscribe flow is implemented yet.
-- It will send to *all* confirmed subscribers (confirmed=1).
 """
 
 from __future__ import annotations
@@ -45,6 +41,7 @@ import argparse
 import glob
 import os
 import re
+import secrets
 import smtplib
 import sqlite3
 from email.message import EmailMessage
@@ -89,26 +86,22 @@ def to_tayis_post_url(post_url: str) -> str:
     parsed = urlparse(post_url)
     path = parsed.path if (parsed.scheme and parsed.netloc) else post_url
 
-    path = path.strip()
-    if not path:
-        return base_root + "/"
+    path_stripped = path
+    if base_path and path_stripped.startswith(base_path + "/"):
+        path_stripped = path_stripped[len(base_path):]
+    if not path_stripped.startswith("/"):
+        path_stripped = "/" + path_stripped
 
-    if not path.startswith("/"):
-        path = "/" + path
+    # If the path doesn't end with .html, append it
+    if not path_stripped.endswith(".html"):
+        # Remove trailing slash first, then add .html
+        if path_stripped.endswith("/"):
+            path_stripped = path_stripped[:-1]
+        # Only add .html if it looks like a post path (not an asset)
+        if "." not in path_stripped.rsplit("/", 1)[-1]:
+            path_stripped = path_stripped + ".html"
 
-    if base_path and path.startswith(base_path):
-        path = path[len(base_path):]
-        if not path.startswith("/"):
-            path = "/" + path
-
-    # Ensure .html extension for post URLs (strip trailing slash first)
-    if not path.endswith(".html"):
-        path_stripped = path.rstrip("/")
-        if re.search(r"/\d{4}/\d{2}/\d{2}/", path_stripped):
-            path = path_stripped + ".html"
-
-    return base_root + path
-
+    return base_root + path_stripped
 
 
 POST_RE = re.compile(r"^(\d{4})-(\d{2})-(\d{2})-(.+)\.md$")
@@ -193,9 +186,14 @@ def parse_post_file(file_path: str) -> tuple[dict[str, str], str]:
 
 def extract_excerpt(content: str, max_length: int = 300) -> str:
     # Roughly similar to the existing Buttondown script.
-    cleaned = content.replace("#", "").replace("*", "").replace("_", "")
-    lines = cleaned.splitlines()
-    for line in lines:
+    clean = re.sub(r"^#+\s+.*$", "", content, flags=re.MULTILINE)
+    clean = re.sub(r"\(.*?\)", "", clean)
+    clean = re.sub(r"!\[.*?\]\(.*?\)", "", clean)
+    clean = re.sub(r"\[([^\]]*)\]\(.*?\)", r"\1", clean)
+    clean = re.sub(r"[*_~`#\[\]]", "", clean)
+    clean = re.sub(r"\n\s*\n", "\n\n", clean)
+
+    for line in clean.split("\n"):
         line = line.strip()
         if line and len(line) > 50:
             if len(line) > max_length:
@@ -204,20 +202,39 @@ def extract_excerpt(content: str, max_length: int = 300) -> str:
     return ""
 
 
-def get_confirmed_subscribers(db_path: str) -> list[str]:
+def get_confirmed_subscribers(db_path: str) -> list[tuple[str, str]]:
+    """Return list of (email, unsubscribe_token) for confirmed subscribers.
+    
+    Automatically generates a token for any subscriber missing one.
+    """
     conn = sqlite3.connect(db_path)
     try:
         cur = conn.execute(
-            "SELECT email FROM newsletter_subscribers WHERE confirmed = 1 ORDER BY id"
+            "SELECT id, email, unsubscribe_token FROM newsletter_subscribers WHERE confirmed = 1 ORDER BY id"
         )
-        emails = [row[0] for row in cur.fetchall()]
-        return emails
+        rows = cur.fetchall()
+        result: list[tuple[str, str]] = []
+        for row_id, email, token in rows:
+            if not token:
+                token = secrets.token_urlsafe(32)
+                conn.execute(
+                    "UPDATE newsletter_subscribers SET unsubscribe_token = ? WHERE id = ?",
+                    (token, row_id)
+                )
+            result.append((email, token))
+        conn.commit()
+        return result
     finally:
         conn.close()
 
 
-def build_email(post_file: str, post_url: str) -> tuple[str, str, str, str]:
-    """Return (subject, text_body, title, excerpt)."""
+def build_unsubscribe_url(unsubscribe_token: str) -> str:
+    """Build the full unsubscribe URL for a given token."""
+    return TAYIS_BASE_URL.rstrip("/") + "/api/newsletter/unsubscribe?token=" + unsubscribe_token
+
+
+def build_email(post_file: str, post_url: str, unsubscribe_url: str) -> tuple[str, str, str, str]:
+    """Return (subject, text_body, html_body, title, excerpt)."""
     frontmatter, content = parse_post_file(post_file)
 
     title = frontmatter.get("title") or "New Post"
@@ -236,11 +253,23 @@ def build_email(post_file: str, post_url: str) -> tuple[str, str, str, str]:
         f"{excerpt}\n\n"
         f"Read the full article: {post_url}\n\n"
         f"---\n"
-        f"This email was sent because you subscribed to Structure of Reality newsletter.\n"
+        f"This email was sent because you subscribed to the Structure of Reality newsletter.\n"
+        f"To unsubscribe, visit: {unsubscribe_url}\n"
         f"Written by {author}\n"
     )
 
-    return subject, text_body, title, excerpt
+    # HTML version with embedded unsubscribe link
+    html_body = f"""<html><body>
+<p><strong>{title}</strong></p>
+<p>{excerpt}</p>
+<p><a href="{post_url}">Read the full article</a></p>
+<hr>
+<p style="font-size:small;color:#666">This email was sent because you subscribed to the Structure of Reality newsletter.<br>
+<a href="{unsubscribe_url}">unsubscribe</a><br>
+Written by {author}</p>
+</body></html>"""
+
+    return subject, text_body, html_body, title, excerpt
 
 
 def env_flag(name: str, default: bool = False) -> bool:
@@ -280,50 +309,43 @@ def main() -> None:
 
     post_url = to_tayis_post_url(args.post_url)
 
-    subject, text_body, title, excerpt = build_email(args.post_file, post_url)
-
+    # Load subscribers with tokens
     subscribers = get_confirmed_subscribers(db_path)
-    subscribers = [e for e in subscribers if EMAIL_RE.match(e)]
 
-    # Optional recipient override (useful for testing)
-    newsletter_to = os.environ.get("NEWSLETTER_TO")
-    if newsletter_to and newsletter_to.strip():
-        candidates = [x.strip().lower() for x in newsletter_to.split(",") if x.strip()]
-        unique: list[str] = []
-        seen = set()
-        for e in candidates:
-            if EMAIL_RE.match(e) and e not in seen:
-                unique.append(e)
-                seen.add(e)
-        subscribers = unique
-        print(f"NEWSLETTER_TO override active; recipients: {len(subscribers)}")
+    print(f"Post:         {args.post_file}")
+    print(f"Public URL:   {post_url}")
+    print(f"Subscribers:  {len(subscribers)}")
+    print(f"Dry run:      {'YES (no emails will be sent)' if dry_run else 'NO (sending real emails)'}")
+    print()
 
-    newsletter_limit = os.environ.get("NEWSLETTER_LIMIT")
-    if newsletter_limit and newsletter_limit.strip():
-        try:
-            n = int(newsletter_limit)
-            if n >= 0:
-                subscribers = subscribers[:n]
-        except ValueError:
-            raise SystemExit("NEWSLETTER_LIMIT must be an integer")
-
-    print("=== Newsletter send ===")
-    print(f"Post: {args.post_file}")
-    print(f"URL:  {post_url}")
-    print(f"Title: {title}")
-    print(f"Excerpt: {excerpt[:120] + ('...' if len(excerpt) > 120 else '')}")
-    print(f"Confirmed subscribers: {len(subscribers)}")
-
-    if dry_run:
-        print("DRY_RUN=1: not sending emails.")
-        print("Would send to (first 20):")
-        for e in subscribers[:20]:
-            print(f"  - {e}")
+    if not subscribers:
+        print("No confirmed subscribers to send to.")
         return
 
+    # Build email content for the first subscriber (used for dry-run display)
+    first_email, first_token = subscribers[0]
+    unsubscribe_url = build_unsubscribe_url(first_token)
+    subject, text_body, html_body, title, excerpt = build_email(args.post_file, post_url, unsubscribe_url)
+
+    print(f"Subject: {subject}")
+    print(f"Title:   {title}")
+    print(f"Excerpt: {excerpt[:100]}...")
+    print(f"--- Body preview ---")
+    print(text_body[:500])
+    print(f"--- End preview ---")
+    print()
+
+    if dry_run:
+        print("DRY RUN — no emails were sent.")
+        print("Subscriber list with unsubscribe URLs:")
+        for email, token in subscribers:
+            print(f"  {email} → {build_unsubscribe_url(token)}")
+        return
+
+    # --- Real send ---
     smtp_host = os.environ.get("SMTP_HOST")
     if not smtp_host:
-        raise SystemExit("SMTP_HOST is required unless DRY_RUN=1")
+        raise SystemExit("SMTP_HOST env is required unless DRY_RUN=1")
     smtp_port = int(os.environ.get("SMTP_PORT", "587"))
     smtp_username = os.environ.get("SMTP_USERNAME")
     smtp_password = os.environ.get("SMTP_PASSWORD")
@@ -345,12 +367,17 @@ def main() -> None:
         if smtp_username and smtp_password:
             smtp.login(smtp_username, smtp_password)
 
-        for idx, recipient in enumerate(subscribers, start=1):
+        for idx, (recipient, token) in enumerate(subscribers, start=1):
+            # Build per-recipient email with their unique unsubscribe link
+            unsub_url = build_unsubscribe_url(token)
+            _, per_text_body, per_html_body, _, _ = build_email(args.post_file, post_url, unsub_url)
+
             msg = EmailMessage()
             msg["Subject"] = subject
             msg["From"] = email_from
             msg["To"] = recipient
-            msg.set_content(text_body)
+            msg.set_content(per_text_body)
+            msg.add_alternative(per_html_body, subtype="html")
 
             try:
                 smtp.send_message(msg)

@@ -2,6 +2,7 @@
 """Simple comment and newsletter server for Jekyll blog. Stores data in SQLite."""
 
 import json
+import secrets
 import sqlite3
 import time
 import re
@@ -43,12 +44,17 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             email TEXT NOT NULL UNIQUE,
             subscribed_at INTEGER NOT NULL,
-            confirmed INTEGER DEFAULT 0
+            confirmed INTEGER DEFAULT 0,
+            unsubscribe_token TEXT
         )
     """)
     conn.execute("""
         CREATE INDEX IF NOT EXISTS idx_newsletter_email
         ON newsletter_subscribers(email)
+    """)
+    conn.execute("""
+        CREATE INDEX IF NOT EXISTS idx_newsletter_token
+        ON newsletter_subscribers(unsubscribe_token)
     """)
     
     conn.commit()
@@ -103,6 +109,39 @@ class CommentHandler(BaseHTTPRequestHandler):
                 "post_slug": post_slug,
                 "comments": [dict(c) for c in comments]
             })
+        
+        # GET /api/newsletter/unsubscribe?token=...
+        elif parsed.path == "/api/newsletter/unsubscribe":
+            qs = parse_qs(parsed.query)
+            token = qs.get("token", [None])[0]
+            
+            if not token:
+                self._send_json({"error": "token is required"}, 400)
+                return
+            
+            conn = get_db()
+            cur = conn.execute(
+                "SELECT id, email FROM newsletter_subscribers WHERE unsubscribe_token = ?",
+                (token,)
+            )
+            row = cur.fetchone()
+            
+            if not row:
+                conn.close()
+                self._send_json({"error": "invalid unsubscribe token"}, 404)
+                return
+            
+            # Delete the subscriber
+            subscriber_email = row["email"]
+            conn.execute("DELETE FROM newsletter_subscribers WHERE id = ?", (row["id"],))
+            conn.commit()
+            conn.close()
+            
+            self._send_json({
+                "message": f"Successfully unsubscribed {subscriber_email}",
+                "unsubscribed": True
+            })
+        
         else:
             self._send_json({"error": "not found"}, 404)
 
@@ -161,11 +200,13 @@ class CommentHandler(BaseHTTPRequestHandler):
                 self._send_json({"error": "invalid email"}, 400)
                 return
             
+            token = secrets.token_urlsafe(32)
+            
             conn = get_db()
             try:
                 cur = conn.execute(
-                    "INSERT INTO newsletter_subscribers (email, subscribed_at, confirmed) VALUES (?, ?, ?)",
-                    (email, int(time.time()), 1)
+                    "INSERT INTO newsletter_subscribers (email, subscribed_at, confirmed, unsubscribe_token) VALUES (?, ?, ?, ?)",
+                    (email, int(time.time()), 1, token)
                 )
                 subscriber_id = cur.lastrowid
                 conn.commit()
