@@ -134,7 +134,7 @@ Automatically send emails to all newsletter subscribers when you publish a new p
    - Email is automatically sent to all subscribers
 
 ### Email Content:
-- Subject: "📝 New Post: [Post Title]"
+- Subject: "Structure Of Reality New Post."
 - Body: Post excerpt with link to full article
 
 ---

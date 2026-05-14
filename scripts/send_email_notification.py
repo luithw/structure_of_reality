@@ -105,6 +105,41 @@ def extract_excerpt(content, max_length=300):
     return ""
 
 
+TAYIS_BASE_URL = "https://tayis.io/u/tim-lui/p/structure-of-reality/"
+
+
+def to_tayis_post_url(post_url: str) -> str:
+    """Re-root a post URL to the Tayis base URL."""
+    from urllib.parse import urlparse
+
+    base_parsed = urlparse(TAYIS_BASE_URL)
+    base_path = (base_parsed.path or "").rstrip("/")
+    base_root = TAYIS_BASE_URL.rstrip("/")
+
+    parsed = urlparse(post_url)
+    path = parsed.path if (parsed.scheme and parsed.netloc) else post_url
+
+    path = path.strip()
+    if not path:
+        return base_root + "/"
+
+    if not path.startswith("/"):
+        path = "/" + path
+
+    if base_path and path.startswith(base_path):
+        path = path[len(base_path):]
+        if not path.startswith("/"):
+            path = "/" + path
+
+    # Ensure .html extension for post URLs (strip trailing slash first)
+    if not path.endswith(".html"):
+        path_stripped = path.rstrip("/")
+        if re.search(r"/\d{4}/\d{2}/\d{2}/", path_stripped):
+            path = path_stripped + ".html"
+
+    return base_root + path
+
+
 def main():
     if len(sys.argv) < 3:
         print("Usage: python send_email_notification.py <post_file.md> <github_pages_url>")
@@ -112,6 +147,7 @@ def main():
     
     post_file = sys.argv[1]
     post_url = sys.argv[2]
+    post_url = to_tayis_post_url(post_url)
     
     # Get Buttondown API key from environment
     api_key = os.environ.get("BUTTONDOWN_API_KEY")
@@ -134,9 +170,9 @@ def main():
     author = frontmatter.get("author", "Tim Lui")
     
     # Create email content
-    subject = f"📝 New Post: {title}"
+    subject = "Structure Of Reality - New Post"
     
-    email_body = f"""# {title}
+    email_body = f"""#  {title}
 
 {excerpt}
 
