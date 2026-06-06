@@ -2,12 +2,12 @@
 
 **Chinese American computer scientist, navigating to the origin of intelligence.**
 
-A personal blog series and research journal exploring artificial intelligence, consciousness, spatial intelligence, and the fundamental nature of reality. This site is hosted with Jekyll and GitHub Pages and serves as the writing layer around the broader research program.
+A personal blog series and research journal exploring artificial intelligence, consciousness, spatial intelligence, and the fundamental nature of reality. This site is served from the generated `_site/` output (via the local Preview app) and serves as the writing layer around the broader research program.
 
 ## 🌟 Features
 
 - **Static Site Generator**: Built with Jekyll for a fast, simple, and maintainable blog
-- **GitHub Pages Hosting**: Free hosting with straightforward deployment
+- **Local Preview Hosting**: Served from the generated `_site/` output (rebuild required when `_posts/` changes)
 - **Personal Research Journal**: A home for long-form writing on intelligence, consciousness, and AI research
 - **Modern Design**: Clean responsive layout optimized for reading
 - **Post Archive**: Dedicated archive page for browsing the essay series
@@ -66,8 +66,6 @@ structure-of-reality/
 - Bundler
 - Python 3.8+
 - Git
-- GitHub account
-
 ### Local Development
 
 1. **Clone the repository**
@@ -177,21 +175,22 @@ This post helps connect the philosophical direction of *Structure of Reality* to
 
 ## 🚀 Publishing Workflow
 
-### Local Build
+### Rebuild `_site/` (required for the Preview app)
+The Tayis Preview server serves the prebuilt `_site/` directory (it does **not** automatically rebuild from `_posts/`).
+
+**Note to future-you**: if the rendered content doesn’t match `_posts/...`, assume `_site/` is stale.
+Rebuild `_site/` and restart the Preview app.
+
+On Preview app startup, the `web` service runs `bash start_web_proxy.sh`. It compares the newest modification times under `_posts/` vs `_site/`; if `_site/` looks stale and `bundle` is available, it attempts `bundle exec jekyll build` (best-effort). If `bundle` is missing or the build fails, it logs a WARNING and continues serving the existing `_site/` (so stale content may persist). Look for log lines prefixed with `[start_web_proxy]`.
+
+If you have Jekyll available:
 
 ```bash
-bundle exec jekyll serve
+bundle exec jekyll build
 ```
 
-### Publish via Git
-
-Commit changes and push to the main branch of the GitHub repository.
-
-```bash
-git add .
-git commit -m "Add new blog post"
-git push origin main
-```
+### Restart the Preview app
+Restart the Preview app (or `web_proxy.py`) and hard-refresh your browser.
 
 ### Optional Scripts
 
@@ -241,10 +240,11 @@ bundle exec jekyll serve
 
 ### Common Issues
 
-**Problem**: Site not updating on GitHub Pages
-- Wait a few minutes for deployment
-- Check GitHub Pages settings
-- Clear browser cache
+**Problem**: Rendered content doesn't match `_posts/...` (stale `_site/` output)
+- The Preview server serves prebuilt files from `_site/`
+- Rebuild/refresh `_site/` (delete stale output and regenerate from `_posts/`)
+- Restart the Preview app and hard-refresh your browser
+- **Note to future-you**: mismatched content ⇒ stale `_site/` ⇒ rebuild + restart
 
 **Problem**: Styles not loading correctly
 - Confirm `assets/css/main.css` exists
@@ -253,8 +253,6 @@ bundle exec jekyll serve
 ## 📚 Resources
 
 - [Jekyll Documentation](https://jekyllrb.com/docs/)
-- [GitHub Pages Documentation](https://docs.github.com/en/pages)
-
 ## 📝 Writing Tips
 
 1. **Be Authentic**: This is your personal journal and research voice
